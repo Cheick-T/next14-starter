@@ -1,0 +1,66 @@
+:root {
+  --bg : black;
+  --bgSoft: #2d2d2d;
+  --text : white;
+  --textSoft: #e5e5e5;
+  --btn: #3673fd;
+}
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body{
+ background-color: var(--bg);
+ color: var(--text);
+}
+
+a{
+    text-decoration: none;
+    color: inherit;
+}
+
+.container {
+    background-color: rebeccapurple;
+    width: 1536px;
+    margin: auto;
+    padding-left: 50px;
+    padding-right: 50px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+@media (max-width: 1536px) {
+    .container {
+        width: 1360px;
+    }
+}
+@media (max-width: 1366) {
+    .container {
+        width: 1288px;
+    }
+}
+@media (max-width: 1280px) {
+    .container {
+        width: 1280px;
+    }
+}
+@media (max-width: 1024px) {
+    .container {
+        width: 760px;
+    }
+}
+@media (max-width: 768px) {
+    .container {
+        width: 648px;
+    }
+}
+@media (max-width: 640px) {
+    .container {
+        width: 475px;
+    }
+}
