@@ -1,0 +1,46 @@
+.contactMainDiv{
+    display: flex;
+    justify-content: center;
+    gap: 100px;
+    
+    
+}
+
+.Imgcontainer{
+    flex: 1;
+    position: relative;
+    height: 500px;
+}
+
+.FormDiv{
+    flex: 1;
+}
+
+.img{
+    object-fit: contain;
+}
+.form{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form input,
+.form textarea {
+    border-radius: 5px;
+    padding: 20px;
+    border: none;
+    outline: none;
+    background-color: var(--bgSoft);
+    color :var(--text)
+}
+
+.form button{
+    padding : 20px;
+    background-color: var(--btn);
+    color : var(--text);
+    border : none;
+    border-radius: 5px;
+    cursor: pointer;
+
+}
