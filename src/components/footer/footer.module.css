@@ -13,3 +13,10 @@
 .text{
     font-size: 14px;
 }
+
+@media (max-width : 768px) {
+    .container{
+        align-items: center;
+        justify-content: space-around;
+    }
+}
