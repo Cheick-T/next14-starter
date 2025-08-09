@@ -39,9 +39,9 @@ const SinglePostPage = async({params}) => {
         <h1 className={styles.title}> {post.title} </h1>
         <div className={styles.detail}>
           <Image  className={styles.avatar} alt ="Blog Image" src ="/noavatar.png" width={50} height={50}/>
-          <Suspense fallback = {<div>Loading...</div>}>
+          { <Suspense fallback = {<div>Loading...</div>}>
             <PostUser userId = {post.userId}/>
-          </Suspense>
+          </Suspense> }
           
 
           <div className={styles.detailText}>
