@@ -12,10 +12,20 @@ import { getPosts } from "@/lib/data";
 
 // }
 
-const Blog = async () => {
+const getData = async () => {
+  const res = await fetch("http://localhost:3000/api/blog", {cache : "no-store"})
+  if (!res.ok) {
+    throw new Error("Something went wrong")
+  }
+  return res.json()
 
-  //const posts = await getData();
-  const posts = await getPosts()
+}
+const Blog = async () => {
+  // FETCH FROM API
+  const posts = await getData();
+
+  //FETCH With ServerAction from Database
+  //const posts = await getPosts()
   return (
     <div className={styles.BlogContainer}>
       {posts.map((post) => (

@@ -5,6 +5,8 @@ import Link from 'next/link';
 import React from 'react';
 import styles from './links.module.css';
 import NavLink from './navLink/navLink.jsx';
+import {handleLogout} from "@/lib/action"
+
 
 
 const links = [
@@ -14,9 +16,9 @@ const links = [
     { href: "/contact", label: "Contact" },
 ]
 
-const Links = () => {
+const Links = ({session}) => {
 
-    const session = true;
+    
     const isAdmin = true;
     const [open, setOpen] = React.useState(false);
 
@@ -27,12 +29,15 @@ const Links = () => {
                     <NavLink item={link} key={link.title}></NavLink>))
                 }
 
-                {session ? (
+                {session?.user ? (
                     <>
-                        {isAdmin && (
+                        {session.user?.isAdmin  && (
                             <NavLink item={{ href: "/admin", label: "Admin" }} key="admin" />
                         )}
-                        <button className={styles.logout}>Logout</button>
+                        <form action = {handleLogout}>
+                            <button className={styles.logout}>Logout</button>
+                        </form>
+                        
                     </>
 
 

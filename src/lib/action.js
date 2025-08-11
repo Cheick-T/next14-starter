@@ -2,6 +2,7 @@
 import { connectToDb } from "./utils";
 import {Post} from "./models"
 import { revalidatePath } from "next/cache";
+import { signIn, signOut} from "@/lib/auth"
 
 
 export const deletePost = async(formData) =>{
@@ -40,3 +41,13 @@ export const addPost = async(formData) =>{
     }
 };
 
+
+export const handleGithubLogin = async () => {
+    console.log("-------------Handle")
+      await signIn("github", { redirectTo: "/" });
+  };
+
+export const handleLogout = async () => {
+    console.log("-------------Handle")
+      await signOut();
+  };
