@@ -1,6 +1,7 @@
 "use server";
+import bcript from "bcrypt"
 import { connectToDb } from "./utils";
-import {Post} from "./models"
+import {Post, User} from "./models"
 import { revalidatePath } from "next/cache";
 import { signIn, signOut} from "@/lib/auth"
 
@@ -43,11 +44,50 @@ export const addPost = async(formData) =>{
 
 
 export const handleGithubLogin = async () => {
-    console.log("-------------Handle")
       await signIn("github", { redirectTo: "/" });
   };
 
 export const handleLogout = async () => {
-    console.log("-------------Handle")
       await signOut();
+  };
+
+export const handleRegister = async (previousState, formData) => {
+    const {username, email, password, passwordRepeat} = Object.fromEntries(formData);
+
+    if (password !== passwordRepeat){ return {error: "Password doesnt match"};}
+
+    try{
+        connectToDb();
+        const user = await User.findOne({username})
+        if (user) { return {error: "User already exists"}; }
+        const salt = await bcript.genSalt(10);
+        const hashedPassword = await bcript.hash(password, salt)
+        const newUser = new User ({ username, email, password : hashedPassword});
+        console.log("Try to save")
+        await newUser.save();
+        console.log("User save in database throughout register form")
+        return {success: true}
+
+    }catch(err){
+        console.log(err)
+        return {error : "Something went wrong during connecting to register a user"};
+    }
+  };
+
+
+
+export const Handlelogin = async (previousState, formData) => {
+    const {username,  password} = Object.fromEntries(formData);
+
+    try{
+        console.log("--------------------------------debut cred")
+        const res = await signIn("credentials",  {username, password, redirect: false,})
+        console.log("[action] signIn result", res);
+
+    }catch(err){
+        console.log(err.message)
+        if (err.message.includes("credentialssignin")){return {error :  "Wrong credentials"};}
+
+        return {error :  "Something went wrong during login with credentials"};
+    }
   };

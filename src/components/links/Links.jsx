@@ -26,7 +26,7 @@ const Links = ({session}) => {
         <div className={styles.container}>
             <div className={styles.links}>
                 {links.map((link) => (
-                    <NavLink item={link} key={link.title}></NavLink>))
+                    <NavLink item={link} key={link.title} ></NavLink>))
                 }
 
                 {session?.user ? (
