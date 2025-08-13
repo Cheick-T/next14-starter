@@ -1,12 +1,14 @@
 "use server";
-import bcript from "bcrypt"
+import bcript from "bcryptjs"
 import { connectToDb } from "./utils";
 import {Post, User} from "./models"
 import { revalidatePath } from "next/cache";
 import { signIn, signOut} from "@/lib/auth"
+import { redirect } from "next/navigation";
 
 
-export const deletePost = async(formData) =>{
+export const deletePost = async( formData) =>{
+    "use server";
     
 
     const {postId} = Object.fromEntries(formData);
@@ -17,6 +19,7 @@ export const deletePost = async(formData) =>{
         await Post.findByIdAndDelete(postId);
         console.log(`Post with ${postId} delete to db`);
         revalidatePath("/blog");
+        revalidatePath("/admin");
 
     }catch(err){
         console.log("Something went wrong during connecting to detele a post");
@@ -25,7 +28,7 @@ export const deletePost = async(formData) =>{
     }
 };
 
-export const addPost = async(formData) =>{
+export const addPost = async(previousState, formData) =>{
    
     const {title, desc, slug, userId} = Object.fromEntries(formData);
 
@@ -35,9 +38,47 @@ export const addPost = async(formData) =>{
         await newPost.save();
         console.log("Save to db");
         revalidatePath("/blog");
+        revalidatePath("/admin");
 
     }catch(err){
         console.log("Something went wrong during connecting to register a post");
+        throw new Error(err);
+    }
+};
+
+export const deleteUser = async( formData) =>{
+    
+
+    const {id} = Object.fromEntries(formData);
+
+    try{
+        connectToDb();
+        await Post.deleteMany({userId : id})
+        await User.findByIdAndDelete(id);
+        console.log(`User with ${id} delete to db`);
+        revalidatePath("/admin");
+        
+
+    }catch(err){
+        console.log("Something went wrong during connecting to detele a user");
+        console.log(err);
+        return {err : "Something went wrong during connecting to detele a user"}
+    }
+};
+
+export const addUser = async(previousState, formData) =>{
+   
+    const {username, email, password} = Object.fromEntries(formData);
+
+    try{
+        connectToDb();
+        const newUser = new User({ username, email, password});
+        await newUser.save();
+        console.log("Save to db");
+        revalidatePath("/admin");
+
+    }catch(err){
+        console.log("Something went wrong during connecting to register a user");
         throw new Error(err);
     }
 };
@@ -81,13 +122,14 @@ export const Handlelogin = async (previousState, formData) => {
 
     try{
         console.log("--------------------------------debut cred")
-        const res = await signIn("credentials",  {username, password, redirect: false,})
+        const res = await signIn("credentials",  {username, password, redirect: false ,})
         console.log("[action] signIn result", res);
+        redirect("/");
 
     }catch(err){
         console.log(err.message)
         if (err.message.includes("credentialssignin")){return {error :  "Wrong credentials"};}
 
-        return {error :  "Something went wrong during login with credentials"};
+        throw err;
     }
   };

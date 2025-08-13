@@ -3,7 +3,8 @@ import GitHub from "next-auth/providers/github"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { connectToDb } from "./utils";
 import { User } from "@/lib/models"
-import bcrypt from "bcrypt"
+import bcrypt from "bcryptjs"
+import { authConfig } from "./auth.config";
 
 
 const login = async (credentials) => {
@@ -11,9 +12,9 @@ const login = async (credentials) => {
   try {
 
     connectToDb()
-    console.log("--------------------------------user SEARCH")
+    //console.log("--------------------------------user SEARCH")
     const user = await User.findOne({ username: credentials.username })
-    console.log(user)
+    //console.log(user)
 
     if (!user) {
       throw new Error("User not found")
@@ -33,7 +34,9 @@ const login = async (credentials) => {
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  ...authConfig,
   providers: [
+    
     GitHub({ clientId: process.env.GITHUB_ID, clientSecret: process.env.GITHUB_SECRET }),
     CredentialsProvider({
       async authorize(credentials) {
@@ -75,7 +78,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
       return true
 
-    }
+    },
+    ...authConfig.callbacks,
   }
 
 })
